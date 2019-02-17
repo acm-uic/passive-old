@@ -1,5 +1,5 @@
 # Passive
-Active Directory managemen in wirtten in Typescript :sunglasses:.
+Active Directory management written in Typescript :sunglasses:.
 
 ## Dependencies
 - `ldapjs`
@@ -13,7 +13,7 @@ Active Directory managemen in wirtten in Typescript :sunglasses:.
 ## Functions
 ### Add ACM Member
 - Add new User (with custom attributes. Refer appendix)
-- Move user to  month and year OU
+- Move user to month and year OU
 - Add user to `ACMPaid` Group
 - Set random password
 - Send email with account details
@@ -28,7 +28,7 @@ Find member by
 - username (`sAMAccountName`)
 - uin (`UICUIN`)
 - netID (`UICnetid`)
-- majow (`UICMajor`)
+- major (`UICMajor`)
 - custom LDAP search
 
 ### Reset Password

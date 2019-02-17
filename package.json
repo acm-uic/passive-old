@@ -1,0 +1,30 @@
+{
+  "name": "passive",
+  "version": "0.1.0",
+  "description": "UIC ACM AD management library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acm-uic/passive.git"
+  },
+  "author": "Bharat Middha and Will Toher",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/acm-uic/passive/issues"
+  },
+  "homepage": "https://github.com/acm-uic/passive#readme",
+  "dependencies": {
+    "ldapjs": "^1.0.2",
+    "nodemailer": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/ldapjs": "^1.0.3",
+    "@types/nodemailer": "^4.6.6",
+    "eslint": "^5.14.0",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  }
+}
