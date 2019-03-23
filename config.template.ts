@@ -3,6 +3,9 @@ export const domain = {
     bindUsername: '',
     bindPassword: '',
     baseDN: '',
+    netbiosName: '',
+    tls: '',
+    tlsCertificate: '',
 };
 
 export const user = {
