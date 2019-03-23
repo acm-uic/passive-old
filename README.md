@@ -6,7 +6,7 @@ Active Directory management written in Typescript :sunglasses:.
 - `nodemailer`
 
 ## Setup
-- Add secrets to `secrets.json`. Refer to `secrets.json.example`.
+- Add secrets to `config.ts`. Refer to `config.template.ts`.
 - `npm install`
 - `npm run start`
 
@@ -42,7 +42,6 @@ Find member by
 ### Change status to Alumni
 - Add user to `ACMAlumni`.
 
-
 ## Appendix
 ### Custom attributes
 - UICnetid
@@ -50,6 +49,7 @@ Find member by
 - UICClassLevel
 - UICMajor
 - UICCollege
+
 ### Defining the next UID/GID number to use
 Every time a UID/GID number is assigned using Active Directory Users and Computers (ADUC), the next UID/GID number is stored inside the Active Directory. By default, ADUC starts assigning UID and GID numbers at 10000.
 
@@ -70,6 +70,7 @@ msSFU30MaxGidNumber: 50000
 ```
 
 Source (https://wiki.samba.org/index.php/Maintaining_Unix_Attributes_in_AD_using_ADUC)
+
 ### Unix Attributes
 The following attributes need to be set to add functionality for UNIX based domain members.
 #### Users
