@@ -1,24 +1,23 @@
-import * as ldap from 'ldapjs';
-import * as  config from './config';
+import { createClient, Error, Client, Change } from 'ldapjs';
+import { domain } from './config';
 
-async function getBind(): Promise<[ldap.Error, ldap.Client]> {
+async function getBind(): Promise<[Error, Client]> {
     return new Promise(async (resolve, reject) => {
-        const client = ldap.createClient({
-            url: config.domain.host,
+        const client = createClient({
+            url: domain.host,
             tlsOptions: {
                 rejectUnauthorized: false,
             },
         });
-        client.bind(config.domain.bindUsername, config.domain.bindPassword, (err, data) => {
+        client.bind(domain.bindUsername, domain.bindPassword, (err, data) => {
             resolve([err, client]);
         });
     });
 }
 
-
 export async function addObject(name: string, ou: string, newObject: any): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        const dn = String(`${name},${ou}${config.domain.baseDN}`);
+        const dn = String(`${name},${ou}${domain.baseDN}`);
         const [error, client] = await getBind();
         if (error) {
             return reject(error);
@@ -35,6 +34,7 @@ export async function addObject(name: string, ou: string, newObject: any): Promi
             delete newObject.userPassword;
             resolve(newObject);
         });
+        client.unbind(e => reject(e));
     });
 }
 
@@ -50,6 +50,7 @@ export async function removeObject(dn: string): Promise<{}> {
             }
             resolve({ success: true });
         });
+        client.unbind(e => reject(e));
     });
 }
 
@@ -69,10 +70,51 @@ export async function modifyDN(oldDN: string, newDN: string): Promise<{}> {
         } catch (e) {
             return reject({ message: e.message });
         }
+        client.unbind(e => reject(e));
     });
 }
 
-export async function updateObject(): Promise<void> { }
-export async function searchObject(): Promise<void> { }
+export async function updateObject(dn: string, change: Change): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+        const [error, client] = await getBind();
+        if (error) {
+            return reject(error);
+        }
+        try {
+            client.modify(dn, change, (error) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve();
+            });
+        } catch (e) {
+            return reject({ message: e.message });
+        }
+        client.unbind(e => reject(e));
+    });
+}
 
-export async function getGroupMembers(): Promise<void> { }
+export async function searchObject(searchDN: string, opts: {}): Promise<{ [attribute: string]: any }> {
+    return new Promise(async (resolve, reject) => {
+        const [error, client] = await getBind();
+        if (error) {
+            return reject(error);
+        }
+        try {
+            client.search(searchDN, opts, (error, res) => {
+                if (error) {
+                    return reject(error);
+                }
+                res.on('searchEntry', (entry) => {
+                    return resolve(entry.object);
+                });
+                res.on('error', (error) => {
+                    return reject({ message: error.message });
+                });
+            });
+        } catch (e) {
+            return reject({ message: e.message });
+        }
+        client.unbind(e => reject(e));
+    });
+}

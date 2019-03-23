@@ -1,5 +1,5 @@
-import * as ldap from './ldapHelpers';
-import * as config from './config';
+import { addObject } from './ldapHelpers';
+import { user } from './config';
 
 enum Group {
     'ACMPaid',
@@ -47,16 +47,16 @@ export class User implements User {
             uid: this.uid,
             title: this.title,
             telephone: this.phone,
-            userPrincipalName: `${this.username}@${config.user.domain}`,
+            userPrincipalName: `${this.username}@${user.domain}`,
             sAMAccountName: this.username,
-            objectClass: config.user.userObjectClass,
+            objectClass: user.userObjectClass,
             userPassword: this.encryptPassword(this.password),
-            msSFU30NisDomain: config.user.msSFU30NisDomain,
+            msSFU30NisDomain: user.msSFU30NisDomain,
             uidNumber: this.getNewUID(),
-            gidNumber: config.user.defaultGid,
-            loginShell: config.user.loginShell,
-            unixHomeDirectory: `${config.user.homeDirectory}/${this.username}`,
-            primaryGroupID: config.user.primaryGroupID,
+            gidNumber: user.defaultGid,
+            loginShell: user.loginShell,
+            unixHomeDirectory: `${user.homeDirectory}/${this.username}`,
+            primaryGroupID: user.primaryGroupID,
             employeeID: this.uin,
         };
     }
@@ -78,7 +78,8 @@ export class User implements User {
         const now = new Date();
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
             'September', 'October', 'November', 'December'];
-        const ou = `OU=${months[now.getMonth()]},OU=${now.getFullYear()},${config.user.baseOU}`;
-        ldap.addObject(this.username, ou, this.toLdapObj());
+        const ou = `OU=${months[now.getMonth()]},OU=${now.getFullYear()},${user.baseOU}`;
+        addObject(this.username, ou, this.toLdapObj());
     }
+
 }
