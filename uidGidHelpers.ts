@@ -2,25 +2,27 @@ import { Change } from 'ldapjs';
 import { domain } from './config';
 import { searchObject, updateObject } from './ldapHelpers';
 
-export async function incrementUid() {
+export async function getNewGid(): Promise<string> {
     const ypserversDn = `CN=${domain.netbiosName},CN=ypservers,CN=ypServ30,CN=RpcServices,CN=System,
     ${domain.baseDN}`;
 
     const searchRes = await searchObject(ypserversDn, {});
     const currentUid = searchRes['msSFU30MaxGidNumber'];
-    const nextUid = (Number(currentUid) + 1).toString();
+    const nextGid = (Number(currentUid) + 1).toString();
 
     const change = new Change({
         operation: 'replace',
         modification: {
-            msSFU30MaxGidNumber: nextUid,
+            msSFU30MaxGidNumber: nextGid,
         },
     });
-
-    await updateObject(ypserversDn, change);
+    return new Promise((resolve, reject) => {
+        updateObject(ypserversDn, change).then(() => resolve(nextGid))
+            .catch(err => reject(err));
+    });
 }
 
-export async function incrementGid() {
+export async function getNewUid(): Promise<string> {
     const ypserversDn = `CN=${domain.netbiosName},CN=ypservers,CN=ypServ30,CN=RpcServices,CN=System,
     ${domain.baseDN}`;
 
@@ -35,4 +37,5 @@ export async function incrementGid() {
         },
     });
     await updateObject(ypserversDn, change);
+    return nextUid;
 }
